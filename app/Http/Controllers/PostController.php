@@ -5,18 +5,20 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
+
 use App\Models\Post;
 
 class PostController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        
-        return view ('blog.index')
-        ->with('posts',Post::get());
+
+        return view('blog.index')
+            ->with('posts', Post::all());
     }
 
     /**
@@ -24,7 +26,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        return view ('blog.create');
+        return view('blog.create');
     }
 
     /**
@@ -32,27 +34,26 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-     $request->validate([
-        'title'=>'required',
-        'description'=>'required',
-        'image'=>'required|mimes:jpg,png,jpeg'
-     ]);
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg'
+        ]);
 
-     $slug=Str::slug($request->title,'-');
+        $slug = Str::slug($request->title, '-');
 
-     $newImageName= uniqid(). '-' . $slug . '.' . $request->image->extension();
-     $request->image->move(public_path('images'), $newImageName);
+        $newImageName = uniqid() . '-' . $slug . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $newImageName);
 
-     Post::create([
-        'title'=> $request->input('title'),
-        'description'=> $request->input('description'),
-        'slug'=>$slug,
-        'image_path'=>$newImageName,
-        'user_id'=>auth()->user()->id
-     ]);
+        Post::create([
+            'title' => $request->input('title'),
+            'description' => $request->input('description'),
+            'slug' => $slug,
+            'image_path' => $newImageName,
+            'user_id' => auth()->user()->id
+        ]);
 
-     return redirect('/blog');
-     
+        return redirect('/blog');
     }
 
     /**
@@ -61,7 +62,7 @@ class PostController extends Controller
     public function show($slug)
     {
         return view('blog.show')
-        ->with('post',Post::where('slug' , $slug)->first());
+            ->with('post', Post::where('slug', $slug)->first());
     }
 
     /**
@@ -69,8 +70,8 @@ class PostController extends Controller
      */
     public function edit($slug)
     {
-        return view('blog.edit') 
-        ->with('post',Post::where('slug' , $slug)->first());
+        return view('blog.edit')
+            ->with('post', Post::where('slug', $slug)->first());
     }
 
     /**
@@ -79,34 +80,31 @@ class PostController extends Controller
     public function update(Request $request, $slug)
     {
         $request->validate([
-            'title'=>'required',
-            'description'=>'required',
-            'image'=>'required|mimes:jpg,png,jpeg'
-         ]); 
-         $newImageName= uniqid(). '-' . $slug . '.' . $request->image->extension();
-         $request->image->move(public_path('images'), $newImageName);
+            'title' => 'required',
+            'description' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg'
+        ]);
+        $newImageName = uniqid() . '-' . $slug . '.' . $request->image->extension();
+        $request->image->move(public_path('images'), $newImageName);
 
-         Post::where('slug',$slug)
-         ->update ([
-            'title'=> $request->input('title'),
-            'description'=> $request->input('description'),
-            'slug'=>$slug,
-            'image_path'=>$newImageName,
-            'user_id'=>auth()->user()->id
-         ]);
-    
-         return redirect('/blog/' . $slug) ->
-         with('message' , ' Your post has been sent successfully.');
+        Post::where('slug', $slug)
+            ->update([
+                'title' => $request->input('title'),
+                'description' => $request->input('description'),
+                'slug' => $slug,
+                'image_path' => $newImageName,
+                'user_id' => auth()->user()->id
+            ]);
 
+        return redirect('/blog/' . $slug)->with('message', ' Your post has been sent successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $slug)
+    public function destroy($slug)
     {
-        Post::where('slug',$slug) ->delete();
-        return redirect('/blog') 
-        -> with('message' , 'deleted successfully');
+        Post::where('slug', $slug)->delete();
+        return redirect('/blog')->with('message', 'deleted successfully');
     }
 }
