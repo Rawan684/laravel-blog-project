@@ -13,12 +13,25 @@
 
         <div class="container">
             <h2 class="text-center m-4 fw-bold"> Create post </h2>
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <form class="form" action="/blog" method="POST" enctype="multipart/form-data">
                 @csrf
                 <input type="text" name="title" placeholder="Title"
                     class=" input form-control form-control-lg py-3 mb-3">
+
+
+
                 <textarea name="description" placeholder="Description" class="form-control py-3 mb-3" rows="3">
         </textarea>
+
                 <div>
                     <label class="upload">
                         select to upload an image
