@@ -40,6 +40,28 @@
                     <button type="submit" class="btn btn-danger mb-2">Delete</button>
                 </form>
             @endif
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Add your comment </h3>
+                </div>
+                <div claa="panel-body">
+                    <form action="{{ route('comment.store', $post->slug) }}" method="POST">
+                        @csrf
+                        <div class="form-group">
+                            <textarea name="body" class="form-control" cols="20" rows="10" placeholder="Enter your comment"></textarea>
+                        </div>
+                        <div class="form-group text-right">
+                            <button type="submit" class="btn btn-primary mt-2 mb-2">Send comment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+
+
         </div>
     </div>
 @endsection
